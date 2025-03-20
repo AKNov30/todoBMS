@@ -228,29 +228,29 @@ class _EdittodoState extends State<Edittodo> {
                                 color: Color(0xff0D7A5C),
                               ),
                             ),
-                            Switch(
-                              value: isCompleted,
-                              activeColor: Color(0xff3CB189),
-                              onChanged: ((value) {
-                                setState(() {
-                                  isCompleted = value;
-                                });
-                              }),
-                            ),
-                            // GestureDetector(
-                            //   onTap: () {
+                            // Switch(
+                            //   value: isCompleted,
+                            //   activeColor: Color(0xff3CB189),
+                            //   onChanged: ((value) {
                             //     setState(() {
-                            //       isCompleted = !isCompleted;
+                            //       isCompleted = value;
                             //     });
-                            //   },
-                            //   child: Image.asset(
-                            //     isCompleted
-                            //         ? 'assets/images/switch_on.png'
-                            //         : 'assets/images/switch_off.png',
-                            //     width: 50,
-                            //     height: 50,
-                            //   ),
+                            //   }),
                             // ),
+                            GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  isCompleted = !isCompleted;
+                                });
+                              },
+                              child: Image.asset(
+                                isCompleted
+                                    ? 'assets/images/switch_on.png'
+                                    : 'assets/images/switch_off.png',
+                                width: 50,
+                                height: 50,
+                              ),
+                            ),
                           ],
                         ),
                       ),
