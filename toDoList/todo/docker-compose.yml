@@ -1,0 +1,32 @@
+version: '3.4'
+
+services:
+  mysql:
+    container_name: mysql
+    restart: unless-stopped
+    env_file: ./.env
+    image: akhadet/todo-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: $MYSQL_ROOT_PASSWORD
+      MYSQL_DATABASE: $MYSQL_DATABASE
+    volumes:
+      - ./todo.sql:/docker-entrypoint-initdb.d/todo.sql
+      - db:/var/lib/mysql
+    ports:
+      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+
+  node_server:
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    image: akhadet/todo-api
+    ports:
+      - $NODE_LOCAL_PORT:$NODE_DOCKER_PORT
+    environment:
+      - DB_HOST=mysql
+      - DB_USER=root
+      - DB_PASSWORD=$MYSQL_ROOT_PASSWORD
+      - DB_NAME=$MYSQL_DATABASE
+      - DB_PORT=$MYSQLDB_DOCKER_PORT
+volumes: 
+  db:
