@@ -38,10 +38,7 @@ class _AddtodoState extends State<Addtodo> {
 
   Future<void> _submittodo() async {
     final url = Uri.parse('$apiUrl/api/create_todo');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676',
-    };
+    final headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676'};
     final body = jsonEncode({
       "user_todo_type_id": 1,
       "user_todo_list_title": todotitle.text.trim(),
@@ -52,12 +49,8 @@ class _AddtodoState extends State<Addtodo> {
 
     final response = await http.post(url, headers: headers, body: body);
     if (response.statusCode == 200) {
-      // Navigator.pop(context);
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => Todolist()),
-        (Route<dynamic> route) => false,
-      );
+      // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Todolist()), (Route<dynamic> route) => false);
+      Get.offAll(Todolist());
       showSnackBar("Create Todo Completed");
     } else {
       showSnackBar("fail");
@@ -65,10 +58,7 @@ class _AddtodoState extends State<Addtodo> {
   }
 
   void showSnackBar(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: const Duration(seconds: 2),
-    );
+    final snackBar = SnackBar(content: Text(message), duration: const Duration(seconds: 2));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -81,31 +71,19 @@ class _AddtodoState extends State<Addtodo> {
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xff4CC599), Color(0xff0D7A5C)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+              gradient: LinearGradient(colors: [Color(0xff4CC599), Color(0xff0D7A5C)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
             ),
           ),
           title: Row(
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => Todolist()),
-                  );
+                  Get.back();
+                  // Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => Todolist()));
                 },
-                child: Image.asset(
-                  "assets/images/ICon Arrowleft.png",
-                  color: Colors.white,
-                ),
+                child: Image.asset("assets/images/ICon Arrowleft.png", color: Colors.white),
               ),
-              Text(
-                "Add Your Todo",
-                style: GoogleFonts.outfit(fontSize: 20, color: Colors.white),
-              ),
+              Text("Add Your Todo", style: GoogleFonts.outfit(fontSize: 20, color: Colors.white)),
             ],
           ),
         ),
@@ -121,26 +99,13 @@ class _AddtodoState extends State<Addtodo> {
                     decoration: BoxDecoration(
                       color: Color(0xffffffff),
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 1,
-                          spreadRadius: 1,
-                          offset: Offset(0, 1),
-                        ),
-                      ],
+                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1))],
                     ),
                     child: TextFormField(
                       controller: todotitle,
                       decoration: InputDecoration(
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide.none,
-                        ),
-                        label: Text(
-                          "Title",
-                          style: GoogleFonts.outfit(fontSize: 15),
-                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(15)), borderSide: BorderSide.none),
+                        label: Text("Title", style: GoogleFonts.outfit(fontSize: 15)),
                       ),
                       validator: (value) {
                         if (value!.isEmpty) {
@@ -156,29 +121,17 @@ class _AddtodoState extends State<Addtodo> {
                     decoration: BoxDecoration(
                       color: Color(0xffffffff),
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 1,
-                          spreadRadius: 1,
-                          offset: Offset(0, 1),
-                        ),
-                      ],
+                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1))],
                     ),
                     child: TextFormField(
                       controller: tododescription,
+                      maxLength: 150,
                       maxLines: 5,
                       keyboardType: TextInputType.multiline,
                       decoration: InputDecoration(
                         alignLabelWithHint: true,
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide.none,
-                        ),
-                        label: Text(
-                          "Description",
-                          style: GoogleFonts.outfit(fontSize: 15),
-                        ),
+                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(15)), borderSide: BorderSide.none),
+                        label: Text("Description", style: GoogleFonts.outfit(fontSize: 15)),
                       ),
                       onEditingComplete: () {
                         if (formkey.currentState!.validate()) {
@@ -199,35 +152,19 @@ class _AddtodoState extends State<Addtodo> {
                     decoration: BoxDecoration(
                       color: Color(0xffffffff),
                       borderRadius: BorderRadius.all(Radius.circular(15)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 1,
-                          spreadRadius: 1,
-                          offset: Offset(0, 1),
-                        ),
-                      ],
+                      boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1))],
                     ),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Success",
-                          style: GoogleFonts.outfit(color: Color(0xff0D7A5C)),
-                        ),
+                        Text("Success", style: GoogleFonts.outfit(color: Color(0xff0D7A5C))),
                         GestureDetector(
                           onTap: () {
                             setState(() {
                               isCompleted = !isCompleted;
                             });
                           },
-                          child: Image.asset(
-                            isCompleted
-                                ? 'assets/images/switch_on.png'
-                                : 'assets/images/switch_off.png',
-                            width: 50,
-                            height: 50,
-                          ),
+                          child: Image.asset(isCompleted ? 'assets/images/switch_on.png' : 'assets/images/switch_off.png', width: 50, height: 50),
                         ),
                       ],
                     ),
@@ -253,15 +190,7 @@ class _AddtodoState extends State<Addtodo> {
                               end: Alignment.bottomCenter,
                             ),
                           ),
-                          child: Center(
-                            child: Text(
-                              "SAVE",
-                              style: GoogleFonts.outfit(
-                                fontSize: 18,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
+                          child: Center(child: Text("SAVE", style: GoogleFonts.outfit(fontSize: 18, color: Colors.white))),
                         ),
                       ),
                     ),

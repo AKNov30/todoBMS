@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 // import 'package:hexcolor/hexcolor.dart';
@@ -27,10 +28,7 @@ class _SignupState extends State<Signup> {
     final String url = '$apiUrl/api/create_user';
     final response = await http.post(
       Uri.parse(url),
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676',
-      },
+      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676'},
       body: json.encode({
         'user_email': userEmail.text.trim(),
         'user_password': userPassword.text.trim(),
@@ -40,7 +38,8 @@ class _SignupState extends State<Signup> {
     );
     if (response.statusCode == 200) {
       showSnackBar("Sign Up successfull");
-      Navigator.pop(context);
+      // Navigator.pop(context);
+      Get.back();
     } else if (response.body.contains("This e-mail has already been used..")) {
       showSnackBar("This e-mail has already been used..");
     } else {
@@ -49,10 +48,7 @@ class _SignupState extends State<Signup> {
   }
 
   void showSnackBar(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: const Duration(seconds: 2),
-    );
+    final snackBar = SnackBar(content: Text(message), duration: const Duration(seconds: 2));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -63,12 +59,7 @@ class _SignupState extends State<Signup> {
       child: Scaffold(
         body: Stack(
           children: [
-            Image.asset(
-              "assets/images/signup.png",
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
-            ),
+            Image.asset("assets/images/signup.png", fit: BoxFit.cover, width: double.infinity, height: double.infinity),
             SingleChildScrollView(
               child: Center(
                 child: Container(
@@ -80,34 +71,20 @@ class _SignupState extends State<Signup> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                            icon: Image.asset(
-                              "assets/images/ICon Arrowleft.png",
-                            ),
+                            icon: Image.asset("assets/images/ICon Arrowleft.png"),
                             onPressed: () {
-                              Navigator.pop(context);
+                              // Navigator.pop(context);
+                              Get.back();
                             },
                           ),
-                          Text(
-                            "SIGN UP",
-                            style: GoogleFonts.outfit(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          Text("SIGN UP", style: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.w500)),
                           SizedBox(width: 68),
                         ],
                       ),
                       SizedBox(height: 20),
-                      Text(
-                        "Please enter the information \n           below to access.",
-                        style: GoogleFonts.outfit(fontSize: 16),
-                      ),
+                      Text("Please enter the information \n           below to access.", style: GoogleFonts.outfit(fontSize: 16)),
                       SizedBox(height: 25),
-                      Image.asset(
-                        "assets/images/Ion Signup.png",
-                        width: 98,
-                        height: 98,
-                      ),
+                      Image.asset("assets/images/Ion Signup.png", width: 98, height: 98),
                       SizedBox(height: 30),
                       Padding(
                         padding: EdgeInsets.all(5),
@@ -118,37 +95,20 @@ class _SignupState extends State<Signup> {
                               Container(
                                 decoration: BoxDecoration(
                                   color: Color(0xffF3F3F3),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 1,
-                                      spreadRadius: 1,
-                                      offset: Offset(0, 1),
-                                    ),
-                                  ],
+                                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1))],
                                 ),
                                 child: TextFormField(
                                   // maxLength: 20,
                                   controller: userFirstname,
+                                  inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                                   decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(15),
-                                      ),
-                                      borderSide: BorderSide.none,
-                                    ),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(15)), borderSide: BorderSide.none),
                                     filled: true,
                                     fillColor: Color(0xffF3F3F3),
                                     label: Text(
                                       "First name",
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff666161),
-                                      ),
+                                      style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff666161)),
                                     ),
                                   ),
                                   textInputAction: TextInputAction.next,
@@ -164,38 +124,20 @@ class _SignupState extends State<Signup> {
                               Container(
                                 decoration: BoxDecoration(
                                   color: Color(0xffF3F3F3),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 1,
-                                      spreadRadius: 1,
-                                      offset: Offset(0, 1),
-                                    ),
-                                  ],
+                                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1))],
                                 ),
                                 child: TextFormField(
                                   // maxLength: 20,
                                   controller: userLastname,
+                                  inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                                   decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(15),
-                                      ),
-
-                                      borderSide: BorderSide.none,
-                                    ),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(15)), borderSide: BorderSide.none),
                                     filled: true,
                                     fillColor: Color(0xffF3F3F3),
                                     label: Text(
                                       "Last name",
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff666161),
-                                      ),
+                                      style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff666161)),
                                     ),
                                   ),
                                   textInputAction: TextInputAction.next,
@@ -211,47 +153,28 @@ class _SignupState extends State<Signup> {
                               Container(
                                 decoration: BoxDecoration(
                                   color: Color(0xffF3F3F3),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 1,
-                                      spreadRadius: 1,
-                                      offset: Offset(0, 1),
-                                    ),
-                                  ],
+                                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1))],
                                 ),
                                 child: TextFormField(
                                   controller: userEmail,
                                   keyboardType: TextInputType.emailAddress,
                                   // maxLength: 20,
+                                  inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                                   decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(15),
-                                      ),
-                                      borderSide: BorderSide.none,
-                                    ),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(15)), borderSide: BorderSide.none),
                                     filled: true,
                                     fillColor: Color(0xffF3F3F3),
                                     label: Text(
                                       "Email",
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff666161),
-                                      ),
+                                      style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff666161)),
                                     ),
                                   ),
                                   textInputAction: TextInputAction.next,
                                   validator: (value) {
                                     if (value!.isEmpty) {
                                       return 'Please enter your email';
-                                    } else if (!EmailValidator.validate(
-                                      value,
-                                    )) {
+                                    } else if (!EmailValidator.validate(value)) {
                                       return 'Please enter a valid email address';
                                     }
                                     return null;
@@ -262,34 +185,17 @@ class _SignupState extends State<Signup> {
                               Container(
                                 decoration: BoxDecoration(
                                   color: Color(0xffF3F3F3),
-                                  borderRadius: BorderRadius.all(
-                                    Radius.circular(15),
-                                  ),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Colors.black.withOpacity(0.2),
-                                      blurRadius: 1,
-                                      spreadRadius: 1,
-                                      offset: Offset(0, 1),
-                                    ),
-                                  ],
+                                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                                  boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1))],
                                 ),
                                 child: TextFormField(
                                   controller: userPassword,
                                   obscureText: passwordVisible,
+                                  inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                                   decoration: InputDecoration(
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(15),
-                                      ),
-                                      borderSide: BorderSide.none,
-                                    ),
+                                    border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(15)), borderSide: BorderSide.none),
                                     suffixIcon: IconButton(
-                                      icon: Icon(
-                                        passwordVisible
-                                            ? Icons.visibility_off
-                                            : Icons.visibility,
-                                      ),
+                                      icon: Icon(passwordVisible ? Icons.visibility_off : Icons.visibility),
                                       onPressed: () {
                                         setState(() {
                                           passwordVisible = !passwordVisible;
@@ -300,11 +206,7 @@ class _SignupState extends State<Signup> {
                                     fillColor: Color(0xffF3F3F3),
                                     label: Text(
                                       "Password",
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w500,
-                                        color: Color(0xff666161),
-                                      ),
+                                      style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff666161)),
                                     ),
                                   ),
                                   onEditingComplete: () {
@@ -334,22 +236,12 @@ class _SignupState extends State<Signup> {
                                     decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(15),
                                       gradient: LinearGradient(
-                                        colors: [
-                                          Color(0xff53CD9F),
-                                          Color(0xff0D7A5C),
-                                        ],
+                                        colors: [Color(0xff53CD9F), Color(0xff0D7A5C)],
                                         begin: Alignment.topCenter,
                                         end: Alignment.bottomCenter,
                                       ),
                                     ),
-                                    child: Text(
-                                      "SIGN UP",
-                                      textAlign: TextAlign.center,
-                                      style: GoogleFonts.outfit(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                      ),
-                                    ),
+                                    child: Text("SIGN UP", textAlign: TextAlign.center, style: GoogleFonts.outfit(fontSize: 18, color: Colors.white)),
                                   ),
                                 ),
                               ),

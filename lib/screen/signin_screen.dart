@@ -1,6 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 // import 'package:hexcolor/hexcolor.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myproject/screen/signup_screen.dart';
@@ -25,14 +28,8 @@ class _SigninState extends State<Signin> {
 
   Future<void> _signin() async {
     final url = Uri.parse('$apiUrl/api/login');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676',
-    };
-    final body = jsonEncode({
-      'user_email': userEmail.text,
-      'user_password': userPassword.text,
-    });
+    final headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676'};
+    final body = jsonEncode({'user_email': userEmail.text, 'user_password': userPassword.text});
 
     final response = await http.post(url, headers: headers, body: body);
 
@@ -48,20 +45,15 @@ class _SigninState extends State<Signin> {
       prefs.setString('lastName', lastName);
       showSnackBar("Sign In successful");
 
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const Todolist()),
-      );
+      // Navigator.pushReplacementNamed(context, '/to_do_list');
+      Get.to(Todolist());
     } else {
       showSnackBar("Invalid email or password.");
     }
   }
 
   void showSnackBar(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: const Duration(seconds: 2),
-    );
+    final snackBar = SnackBar(content: Text(message), duration: const Duration(seconds: 2));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -72,12 +64,7 @@ class _SigninState extends State<Signin> {
       child: Scaffold(
         body: Stack(
           children: [
-            Image.asset(
-              "assets/images/signup.png",
-              fit: BoxFit.cover,
-              width: double.infinity,
-              height: double.infinity,
-            ),
+            Image.asset("assets/images/signup.png", fit: BoxFit.cover, width: double.infinity, height: double.infinity),
             SingleChildScrollView(
               child: Center(
                 child: Container(
@@ -89,24 +76,11 @@ class _SigninState extends State<Signin> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           SizedBox(height: 35),
-                          Text(
-                            "SIGN IN",
-                            style: GoogleFonts.outfit(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w500,
-                            ),
-                          ),
+                          Text("SIGN IN", style: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.w500)),
                           SizedBox(height: 20),
-                          Text(
-                            "Please enter the information \n           below to access.",
-                            style: GoogleFonts.outfit(fontSize: 16),
-                          ),
+                          Text("Please enter the information \n           below to access.", style: GoogleFonts.outfit(fontSize: 16)),
                           SizedBox(height: 25),
-                          Image.asset(
-                            "assets/images/Icon Sigin.png",
-                            width: 98,
-                            height: 98,
-                          ),
+                          Image.asset("assets/images/Icon Sigin.png", width: 98, height: 98),
                           SizedBox(height: 30),
                           Padding(
                             padding: EdgeInsets.all(5),
@@ -117,38 +91,23 @@ class _SigninState extends State<Signin> {
                                   Container(
                                     decoration: BoxDecoration(
                                       color: Color(0xffF3F3F3),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(15),
-                                      ),
+                                      borderRadius: BorderRadius.all(Radius.circular(15)),
                                       boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          blurRadius: 1,
-                                          spreadRadius: 1,
-                                          offset: Offset(0, 1),
-                                        ),
+                                        BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1)),
                                       ],
                                     ),
                                     child: TextFormField(
                                       // maxLength: 20,
                                       controller: userEmail,
                                       keyboardType: TextInputType.emailAddress,
+                                      inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                                       decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15),
-                                          ),
-                                          borderSide: BorderSide.none,
-                                        ),
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(15)), borderSide: BorderSide.none),
                                         filled: true,
                                         fillColor: Color(0xffF3F3F3),
                                         label: Text(
                                           "Email",
-                                          style: GoogleFonts.outfit(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: Color(0xff666161),
-                                          ),
+                                          style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff666161)),
                                         ),
                                       ),
                                       textInputAction: TextInputAction.next,
@@ -164,49 +123,29 @@ class _SigninState extends State<Signin> {
                                   Container(
                                     decoration: BoxDecoration(
                                       color: Color(0xffF3F3F3),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(15),
-                                      ),
+                                      borderRadius: BorderRadius.all(Radius.circular(15)),
                                       boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          blurRadius: 1,
-                                          spreadRadius: 1,
-                                          offset: Offset(0, 1),
-                                        ),
+                                        BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1)),
                                       ],
                                     ),
                                     child: TextFormField(
                                       // maxLength: 20,
                                       controller: userPassword,
                                       obscureText: passwordVisible,
+                                      inputFormatters: [FilteringTextInputFormatter.deny(RegExp(r'\s'))],
                                       decoration: InputDecoration(
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                            Radius.circular(15),
-                                          ),
-                                          borderSide: BorderSide.none,
-                                        ),
+                                        border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(15)), borderSide: BorderSide.none),
                                         suffixIcon: IconButton(
-                                          icon: Icon(
-                                            passwordVisible
-                                                ? Icons.visibility_off
-                                                : Icons.visibility,
-                                          ),
+                                          icon: Icon(passwordVisible ? Icons.visibility_off : Icons.visibility),
                                           onPressed: () {
                                             setState(() {
-                                              passwordVisible =
-                                                  !passwordVisible;
+                                              passwordVisible = !passwordVisible;
                                             });
                                           },
                                         ),
                                         label: Text(
                                           "Password",
-                                          style: GoogleFonts.outfit(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: Color(0xff666161),
-                                          ),
+                                          style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w500, color: Color(0xff666161)),
                                         ),
                                         filled: true,
                                         fillColor: Color(0xffF3F3F3),
@@ -231,11 +170,7 @@ class _SigninState extends State<Signin> {
                                       onPressed: null,
                                       child: Text(
                                         "Forgot Password?",
-                                        style: GoogleFonts.outfit(
-                                          color: Colors.black,
-                                          fontSize: 15,
-                                          fontWeight: FontWeight.w500,
-                                        ),
+                                        style: GoogleFonts.outfit(color: Colors.black, fontSize: 15, fontWeight: FontWeight.w500),
                                       ),
                                     ),
                                   ),
@@ -251,14 +186,9 @@ class _SigninState extends State<Signin> {
                                       child: Container(
                                         padding: EdgeInsets.all(15),
                                         decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(
-                                            15,
-                                          ),
+                                          borderRadius: BorderRadius.circular(15),
                                           gradient: LinearGradient(
-                                            colors: [
-                                              Color(0xff53CD9F),
-                                              Color(0xff0D7A5C),
-                                            ],
+                                            colors: [Color(0xff53CD9F), Color(0xff0D7A5C)],
                                             begin: Alignment.topCenter,
                                             end: Alignment.bottomCenter,
                                           ),
@@ -266,11 +196,7 @@ class _SigninState extends State<Signin> {
                                         child: Text(
                                           "SIGN IN",
                                           textAlign: TextAlign.center,
-                                          style: GoogleFonts.outfit(
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w500,
-                                            color: Colors.white,
-                                          ),
+                                          style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
                                         ),
                                       ),
                                     ),
@@ -288,22 +214,15 @@ class _SigninState extends State<Signin> {
                             width: double.infinity,
                             child: GestureDetector(
                               onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (ctx) => const Signup(),
-                                  ),
-                                );
+                                // Navigator.push(context, MaterialPageRoute(builder: (ctx) => const Signup()));
+                                Get.to(Signup());
                               },
                               child: Container(
                                 padding: EdgeInsets.all(15),
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(15),
                                   gradient: LinearGradient(
-                                    colors: [
-                                      Color(0xff0D7A5C),
-                                      Color(0xff00503E),
-                                    ],
+                                    colors: [Color(0xff0D7A5C), Color(0xff00503E)],
                                     begin: Alignment.topCenter,
                                     end: Alignment.bottomCenter,
                                   ),
@@ -311,11 +230,7 @@ class _SigninState extends State<Signin> {
                                 child: Text(
                                   "SIGN UP",
                                   textAlign: TextAlign.center,
-                                  style: GoogleFonts.outfit(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w500,
-                                    color: Colors.white,
-                                  ),
+                                  style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w500, color: Colors.white),
                                 ),
                               ),
                             ),

@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:myproject/screen/todolist_screen.dart';
@@ -13,13 +15,7 @@ class Edittodo extends StatefulWidget {
   final String listDesc;
   final bool listCompleted;
 
-  const Edittodo({
-    Key? key,
-    required this.listId,
-    required this.listTitle,
-    required this.listDesc,
-    required this.listCompleted,
-  }) : super(key: key);
+  const Edittodo({Key? key, required this.listId, required this.listTitle, required this.listDesc, required this.listCompleted}) : super(key: key);
 
   @override
   State<Edittodo> createState() => _EdittodoState();
@@ -52,10 +48,7 @@ class _EdittodoState extends State<Edittodo> {
 
   Future<void> _updateTodo() async {
     final url = Uri.parse('$apiUrl/api/update_todo');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676',
-    };
+    final headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676'};
 
     final body = jsonEncode({
       "user_todo_list_id": widget.listId,
@@ -69,12 +62,9 @@ class _EdittodoState extends State<Edittodo> {
     final response = await http.post(url, headers: headers, body: body);
     print(body);
     if (response.statusCode == 200) {
-      Navigator.pop(context);
-      Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (context) => Todolist()),
-        (Route<dynamic> route) => false,
-      );
+      // Navigator.pop(context);
+      // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => Todolist()), (Route<dynamic> route) => false);
+      Get.offAll(Todolist());
       showSnackBar("Edit Todo Completed ${response.body}");
     } else {
       showSnackBar("fail");
@@ -82,10 +72,7 @@ class _EdittodoState extends State<Edittodo> {
   }
 
   void showSnackBar(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: const Duration(seconds: 2),
-    );
+    final snackBar = SnackBar(content: Text(message), duration: const Duration(seconds: 2));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
@@ -98,29 +85,18 @@ class _EdittodoState extends State<Edittodo> {
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xff4CC599), Color(0xff0D7A5C)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+              gradient: LinearGradient(colors: [Color(0xff4CC599), Color(0xff0D7A5C)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
             ),
           ),
           title: Row(
             children: [
               TextButton(
                 onPressed: () {
-                  Navigator.pop(context);
-                  Navigator.pop(context);
+                  Get.offAll(Todolist());
                 },
-                child: Image.asset(
-                  "assets/images/ICon Arrowleft.png",
-                  color: Colors.white,
-                ),
+                child: Image.asset("assets/images/ICon Arrowleft.png", color: Colors.white),
               ),
-              Text(
-                "Edit Your Todo",
-                style: GoogleFonts.outfit(fontSize: 20, color: Colors.white),
-              ),
+              Text("Edit Your Todo", style: GoogleFonts.outfit(fontSize: 20, color: Colors.white)),
             ],
           ),
         ),
@@ -130,35 +106,20 @@ class _EdittodoState extends State<Edittodo> {
             child: Form(
               child: Column(
                 children: [
-                  Text("ID: ${widget.listId}"),
+                  // Text("ID: ${widget.listId}"),
                   Column(
                     children: [
                       Container(
                         decoration: BoxDecoration(
                           color: Color(0xffffffff),
                           borderRadius: BorderRadius.all(Radius.circular(15)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 1,
-                              spreadRadius: 1,
-                              offset: Offset(0, 1),
-                            ),
-                          ],
+                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1))],
                         ),
                         child: TextFormField(
                           controller: todotitle,
                           decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(15),
-                              ),
-                              borderSide: BorderSide.none,
-                            ),
-                            label: Text(
-                              "Title",
-                              style: GoogleFonts.outfit(fontSize: 15),
-                            ),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(15)), borderSide: BorderSide.none),
+                            label: Text("Title", style: GoogleFonts.outfit(fontSize: 15)),
                           ),
                           textInputAction: TextInputAction.next,
                         ),
@@ -168,31 +129,17 @@ class _EdittodoState extends State<Edittodo> {
                         decoration: BoxDecoration(
                           color: Color(0xffffffff),
                           borderRadius: BorderRadius.all(Radius.circular(15)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 1,
-                              spreadRadius: 1,
-                              offset: Offset(0, 1),
-                            ),
-                          ],
+                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1))],
                         ),
                         child: TextFormField(
                           controller: tododescription,
+                          maxLength: 150,
                           maxLines: 5,
                           keyboardType: TextInputType.multiline,
                           decoration: InputDecoration(
                             alignLabelWithHint: true,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.all(
-                                Radius.circular(15),
-                              ),
-                              borderSide: BorderSide.none,
-                            ),
-                            label: Text(
-                              "Description",
-                              style: GoogleFonts.outfit(fontSize: 15),
-                            ),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(15)), borderSide: BorderSide.none),
+                            label: Text("Description", style: GoogleFonts.outfit(fontSize: 15)),
                           ),
                           onEditingComplete: () {
                             if (formkey.currentState!.validate()) {
@@ -203,31 +150,16 @@ class _EdittodoState extends State<Edittodo> {
                       ),
                       SizedBox(height: 15),
                       Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 5,
-                        ),
+                        padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                         decoration: BoxDecoration(
                           color: Color(0xffffffff),
                           borderRadius: BorderRadius.all(Radius.circular(15)),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 1,
-                              spreadRadius: 1,
-                              offset: Offset(0, 1),
-                            ),
-                          ],
+                          boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1))],
                         ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              "Success",
-                              style: GoogleFonts.outfit(
-                                color: Color(0xff0D7A5C),
-                              ),
-                            ),
+                            Text("Success", style: GoogleFonts.outfit(color: Color(0xff0D7A5C))),
                             // Switch(
                             //   value: isCompleted,
                             //   activeColor: Color(0xff3CB189),
@@ -243,13 +175,7 @@ class _EdittodoState extends State<Edittodo> {
                                   isCompleted = !isCompleted;
                                 });
                               },
-                              child: Image.asset(
-                                isCompleted
-                                    ? 'assets/images/switch_on.png'
-                                    : 'assets/images/switch_off.png',
-                                width: 50,
-                                height: 50,
-                              ),
+                              child: Image.asset(isCompleted ? 'assets/images/switch_on.png' : 'assets/images/switch_off.png', width: 50, height: 50),
                             ),
                           ],
                         ),
@@ -272,15 +198,7 @@ class _EdittodoState extends State<Edittodo> {
                                 end: Alignment.bottomCenter,
                               ),
                             ),
-                            child: Center(
-                              child: Text(
-                                "SAVE",
-                                style: GoogleFonts.outfit(
-                                  fontSize: 18,
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
+                            child: Center(child: Text("SAVE", style: GoogleFonts.outfit(fontSize: 18, color: Colors.white))),
                           ),
                         ),
                       ),

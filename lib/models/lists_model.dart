@@ -5,13 +5,7 @@ class Lists {
   final bool listCompleted;
   final DateTime lastUpdate;
 
-  Lists({
-    required this.listId,
-    required this.listTitle,
-    required this.listDesc,
-    required this.listCompleted,
-    required this.lastUpdate,
-  });
+  Lists({required this.listId, required this.listTitle, required this.listDesc, required this.listCompleted, required this.lastUpdate});
 
   factory Lists.fromJson(Map<String, dynamic> json) {
     return Lists(

@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/get_core.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
@@ -21,8 +23,7 @@ class Todolist extends StatefulWidget {
 
 class _TodolistState extends State<Todolist> {
   String apiUrl = dotenv.env['api_url'] ?? 'Not Found';
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-      GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
   int? userId;
   String firstName = '';
   String lastName = '';
@@ -43,8 +44,7 @@ class _TodolistState extends State<Todolist> {
     setState(() {
       filteredTodoList =
           todoList.where((todo) {
-            return todo.listTitle.toLowerCase().contains(query) ||
-                todo.listDesc.toLowerCase().contains(query);
+            return todo.listTitle.toLowerCase().contains(query) || todo.listDesc.toLowerCase().contains(query);
           }).toList();
     });
   }
@@ -61,10 +61,7 @@ class _TodolistState extends State<Todolist> {
 
   Future<void> _fetchTodo() async {
     final url = Uri.parse('$apiUrl/api/todo_list/$userId');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676',
-    };
+    final headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676'};
 
     final response = await http.get(url, headers: headers);
     if (response.statusCode == 200) {
@@ -76,12 +73,7 @@ class _TodolistState extends State<Todolist> {
         noData = true;
       } else {
         setState(() {
-          todoList =
-              responseData
-                  .map((data) => Lists.fromJson(data))
-                  .toList()
-                  .reversed
-                  .toList();
+          todoList = responseData.map((data) => Lists.fromJson(data)).toList().reversed.toList();
         });
       }
     } else {
@@ -91,10 +83,7 @@ class _TodolistState extends State<Todolist> {
 
   Future<void> _deleteTodo(int listId) async {
     final url = Uri.parse('$apiUrl/api/delete_todo/$listId');
-    final headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676',
-    };
+    final headers = {'Content-Type': 'application/json', 'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676'};
 
     final response = await http.delete(url, headers: headers);
     if (response.statusCode == 200) {
@@ -126,11 +115,8 @@ class _TodolistState extends State<Todolist> {
 
     await prefs.clear();
 
-    Navigator.pushAndRemoveUntil(
-      context,
-      MaterialPageRoute(builder: (context) => const Signin()),
-      (route) => false,
-    );
+    // Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => const Signin()), (route) => false);
+    Get.offAll(Signin());
   }
 
   void showSignOutModal() {
@@ -144,18 +130,9 @@ class _TodolistState extends State<Todolist> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "SIGN OUT",
-                  style: GoogleFonts.outfit(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
+                Text("SIGN OUT", style: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.bold)),
                 SizedBox(height: 10),
-                Text(
-                  "Do you want to log out?",
-                  style: GoogleFonts.outfit(fontSize: 16),
-                ),
+                Text("Do you want to log out?", style: GoogleFonts.outfit(fontSize: 16)),
                 SizedBox(height: 25),
                 InkWell(
                   onTap: () {
@@ -166,18 +143,8 @@ class _TodolistState extends State<Todolist> {
                     children: [
                       Row(
                         children: [
-                          Image.asset(
-                            "assets/images/Icon Logut.png",
-                            width: 24,
-                            height: 24,
-                          ),
-                          Text(
-                            "  Sign out",
-                            style: GoogleFonts.outfit(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
+                          Image.asset("assets/images/Icon Logut.png", width: 24, height: 24),
+                          Text("  Sign out", style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w400)),
                         ],
                       ),
                       Image.asset("assets/images/Icon Arrow2.png"),
@@ -194,12 +161,7 @@ class _TodolistState extends State<Todolist> {
     );
   }
 
-  void showEditModal(
-    int listId,
-    String listTitle,
-    String listDesc,
-    bool listCompleted,
-  ) {
+  void showEditModal(int listId, String listTitle, String listDesc, bool listCompleted) {
     showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
@@ -215,13 +177,7 @@ class _TodolistState extends State<Todolist> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder:
-                            (context) => Edittodo(
-                              listId: listId,
-                              listTitle: listTitle,
-                              listDesc: listDesc,
-                              listCompleted: listCompleted,
-                            ),
+                        builder: (context) => Edittodo(listId: listId, listTitle: listTitle, listDesc: listDesc, listCompleted: listCompleted),
                       ),
                     );
                   },
@@ -230,18 +186,8 @@ class _TodolistState extends State<Todolist> {
                     children: [
                       Row(
                         children: [
-                          Image.asset(
-                            "assets/images/Icon Edit.png",
-                            width: 24,
-                            height: 24,
-                          ),
-                          Text(
-                            "  Edit",
-                            style: GoogleFonts.outfit(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
+                          Image.asset("assets/images/Icon Edit.png", width: 24, height: 24),
+                          Text("  Edit", style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w400)),
                         ],
                       ),
                       Image.asset("assets/images/Icon Arrow2.png"),
@@ -259,18 +205,8 @@ class _TodolistState extends State<Todolist> {
                     children: [
                       Row(
                         children: [
-                          Image.asset(
-                            "assets/images/Icon Trash.png",
-                            width: 24,
-                            height: 24,
-                          ),
-                          Text(
-                            "  Delete",
-                            style: GoogleFonts.outfit(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w400,
-                            ),
-                          ),
+                          Image.asset("assets/images/Icon Trash.png", width: 24, height: 24),
+                          Text("  Delete", style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w400)),
                         ],
                       ),
                       Image.asset("assets/images/Icon Arrow2.png"),
@@ -291,21 +227,22 @@ class _TodolistState extends State<Todolist> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text('Confirm Delete'),
-          content: const Text(
-            'Are you sure you want to delete this to do list?',
-          ),
+          content: const Text('Are you sure you want to delete this to do list?'),
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                Get.back();
               },
               child: const Text('Cancel'),
             ),
             TextButton(
               onPressed: () {
                 _deleteTodo(listId);
-                Navigator.pop(context);
-                Navigator.pop(context);
+                // Navigator.pop(context);
+                // Navigator.pop(context);
+                Get.back();
+                Get.back();
               },
               child: const Text('Delete', style: TextStyle(color: Colors.red)),
             ),
@@ -316,17 +253,12 @@ class _TodolistState extends State<Todolist> {
   }
 
   void showSnackBar(String message) {
-    final snackBar = SnackBar(
-      content: Text(message),
-      duration: const Duration(seconds: 2),
-    );
+    final snackBar = SnackBar(content: Text(message), duration: const Duration(seconds: 2));
     ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   String maxText(String text, int maxLength) {
-    return text.length > maxLength
-        ? '${text.substring(0, maxLength)}...'
-        : text;
+    return text.length > maxLength ? '${text.substring(0, maxLength)}...' : text;
   }
 
   @override
@@ -335,33 +267,31 @@ class _TodolistState extends State<Todolist> {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         appBar: AppBar(
+          // toolbarHeight: 82.0,
           automaticallyImplyLeading: false,
           flexibleSpace: Container(
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Color(0xff4CC599), Color(0xff0D7A5C)],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-              ),
+              gradient: LinearGradient(colors: [Color(0xff4CC599), Color(0xff0D7A5C)], begin: Alignment.topCenter, end: Alignment.bottomCenter),
             ),
           ),
           title: Row(
             children: [
               Padding(
-                padding: EdgeInsets.all(10),
-                child: Container(
-                  padding: EdgeInsets.all(13),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
+                padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                child: CircleAvatar(
+                  radius: 20,
+                  backgroundColor: Colors.white,
                   child: InkWell(
                     onTap: () {
                       showSignOutModal();
                     },
                     child: Text(
-                      firstName[0],
-                      style: TextStyle(color: Color(0xff53CD9F)),
+                      firstName[0], // ตัวอักษรแรกของชื่อ
+                      style: TextStyle(
+                        color: Color(0xff53CD9F), // สีของตัวอักษร
+                        fontSize: 18, // ขนาดตัวอักษร
+                        fontWeight: FontWeight.bold, // ทำให้ตัวอักษรหนา
+                      ),
                     ),
                   ),
                 ),
@@ -373,13 +303,7 @@ class _TodolistState extends State<Todolist> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      "Hello!",
-                      style: GoogleFonts.outfit(
-                        fontSize: 12,
-                        color: Colors.white,
-                      ),
-                    ),
+                    Text("Hello!", style: GoogleFonts.outfit(fontSize: 12, color: Colors.white)),
                     Text(
                       maxText("$firstName $lastName", 15),
                       // "$firstName $lastName",
@@ -391,226 +315,124 @@ class _TodolistState extends State<Todolist> {
             ],
           ),
         ),
-        body: Stack(
-          children: [
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(8),
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: Color(0xffffffff),
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.2),
-                          blurRadius: 1,
-                          spreadRadius: 1,
-                          offset: Offset(0, 1),
-                        ),
-                      ],
-                    ),
-                    child: TextField(
-                      controller: searchController,
-                      decoration: InputDecoration(
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                          borderSide: BorderSide.none,
-                        ),
-                        labelText: "Search...",
-                      ),
+        body: RefreshIndicator(
+          onRefresh: _refreshTodo,
+          child: ListView(
+            shrinkWrap: true, // ให้ ListView ปรับขนาดตามเนื้อหา
+            physics: AlwaysScrollableScrollPhysics(), // ให้เลื่อนได้เสมอ
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Color(0xffffffff),
+                    borderRadius: BorderRadius.all(Radius.circular(15)),
+                    boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1))],
+                  ),
+                  child: TextField(
+                    controller: searchController,
+                    decoration: InputDecoration(
+                      prefixIcon: Icon(Icons.search),
+                      border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(15)), borderSide: BorderSide.none),
+                      labelText: "Search...",
                     ),
                   ),
                 ),
-                // SizedBox(height: 15),
-                Expanded(
-                  child:
-                      noData
-                          ? Center(child: Text("ยังไม่มีข้อมูล"))
-                          : filteredTodoList.isEmpty &&
-                              searchController.text.isNotEmpty
-                          ? Center(
-                            // ถ้า filteredTodoList ว่างและมีการพิมพ์คำค้นหา
-                            child: Text(
-                              "ไม่พบข้อมูล", // ข้อความแจ้งว่าหากไม่พบข้อมูล
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.grey,
-                              ),
-                            ),
-                          )
-                          : RefreshIndicator(
-                            onRefresh: _refreshTodo,
-                            child: ListView.builder(
-                              itemCount:
-                                  filteredTodoList.isEmpty &&
-                                          searchController.text.isEmpty
-                                      ? todoList
-                                          .length // ถ้าไม่มีการค้นหา ให้แสดงรายการทั้งหมด
-                                      : filteredTodoList
-                                          .length, // ถ้ามีการค้นหาก็แสดงเฉพาะผลการค้นหา
-                              itemBuilder: (context, index) {
-                                final todo =
-                                    filteredTodoList.isEmpty &&
-                                            searchController.text.isEmpty
-                                        ? todoList[index] // ถ้าไม่มีการค้นหา ให้ใช้ todoList
-                                        : filteredTodoList[index]; // ถ้ามีการค้นหา ให้ใช้ filteredTodoList
-                                DateTime utcDateTime = todo.lastUpdate.toUtc();
-                                DateTime thailandTime = utcDateTime.add(
-                                  Duration(hours: 7),
-                                );
-
-                                String formattedDate = DateFormat(
-                                  'hh:mm a - MM/dd/yy',
-                                ).format(thailandTime);
-                                return Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 10,
-                                  ),
-                                  child: Container(
-                                    height: 133,
-                                    margin: EdgeInsets.symmetric(
-                                      horizontal: 2,
-                                      vertical: 5,
-                                    ),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 10,
-                                      vertical: 5,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: Color(0xffffffff),
-                                      borderRadius: BorderRadius.all(
-                                        Radius.circular(10),
-                                      ),
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          blurRadius: 1,
-                                          spreadRadius: 1,
-                                          offset: Offset(0, 1),
-                                        ),
-                                      ],
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceAround,
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                    0,
-                                                    0,
-                                                    8,
-                                                    0,
-                                                  ),
-                                              child: InkWell(
-                                                child: Image.asset(
-                                                  todo.listCompleted
-                                                      ? "assets/images/Check.png"
-                                                      : "assets/images/unCheck.png",
-                                                ),
-                                              ),
-                                            ),
-                                            SizedBox(),
-                                            SizedBox(),
-                                            SizedBox(),
-                                          ],
-                                        ),
-                                        Expanded(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  Text(
-                                                    maxText(todo.listTitle, 20),
-                                                    style: GoogleFonts.outfit(
-                                                      fontSize: 20,
-                                                      fontWeight:
-                                                          FontWeight.w500,
-                                                      color: randomColor(),
-                                                    ),
-                                                    maxLines: 1,
-                                                    overflow:
-                                                        TextOverflow.ellipsis,
-                                                  ),
-                                                  TextButton(
-                                                    onPressed: () {
-                                                      showEditModal(
-                                                        todo.listId,
-                                                        todo.listTitle,
-                                                        todo.listDesc,
-                                                        todo.listCompleted,
-                                                      );
-                                                    },
-                                                    child: Text("..."),
-                                                  ),
-                                                ],
-                                              ),
-                                              Text(
-                                                // "10:19 AM - 10/20/23",
-                                                formattedDate,
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Color(0xffD9D9D9),
-                                                ),
-                                              ),
-                                              SizedBox(height: 5),
-                                              Text(
-                                                todo.listDesc,
-                                                style: TextStyle(
-                                                  fontSize: 12,
-                                                  color: Colors.black,
-                                                ),
-                                                maxLines: 3,
-                                                overflow: TextOverflow.ellipsis,
-                                                softWrap: true,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                );
-                              },
-                            ),
-                          ),
-                ),
-              ],
-            ),
-            Positioned(
-              bottom: 10,
-              right: 10,
-              child: TextButton(
-                onPressed: () {
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (ctx) => const Addtodo()),
-                  // );
-                  Navigator.pushNamed(context, '/add_to_do');
-                  // Navigator.pushNamed(context, '/add_to_do');
-                },
-                child: Image.asset(
-                  'assets/images/Icon Button Add.png',
-                  width: 66,
-                ),
               ),
-            ),
-          ],
+              noData
+                  ? Center(child: Text("ยังไม่มีข้อมูล"))
+                  : filteredTodoList.isEmpty && searchController.text.isNotEmpty
+                  ? Center(child: Text("ไม่พบข้อมูล", style: TextStyle(fontSize: 16, color: Colors.grey)))
+                  : ListView.builder(
+                    shrinkWrap: true,
+                    physics: NeverScrollableScrollPhysics(), // ป้องกันการเลื่อนซ้อน
+                    itemCount: filteredTodoList.isEmpty && searchController.text.isEmpty ? todoList.length : filteredTodoList.length,
+                    itemBuilder: (context, index) {
+                      final todo = filteredTodoList.isEmpty && searchController.text.isEmpty ? todoList[index] : filteredTodoList[index];
+                      DateTime utcDateTime = todo.lastUpdate.toUtc();
+                      DateTime thailandTime = utcDateTime.add(Duration(hours: 7));
+                      String formattedDate = DateFormat('hh:mm a - MM/dd/yy').format(thailandTime);
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Container(
+                          height: 140,
+                          margin: EdgeInsets.symmetric(horizontal: 2, vertical: 5),
+                          padding: EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          decoration: BoxDecoration(
+                            color: Color(0xffffffff),
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 1, spreadRadius: 1, offset: Offset(0, 1))],
+                          ),
+                          child: Row(
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
+                                    child: InkWell(child: Image.asset(todo.listCompleted ? "assets/images/Check.png" : "assets/images/unCheck.png")),
+                                  ),
+                                  SizedBox(),
+                                  SizedBox(),
+                                  SizedBox(),
+                                ],
+                              ),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          maxText(todo.listTitle, 20),
+                                          style: GoogleFonts.outfit(fontSize: 20, fontWeight: FontWeight.w500, color: randomColor()),
+                                          maxLines: 1,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                        TextButton(
+                                          onPressed: () {
+                                            showEditModal(todo.listId, todo.listTitle, todo.listDesc, todo.listCompleted);
+                                          },
+                                          child: Text("..."),
+                                        ),
+                                      ],
+                                    ),
+                                    Text(formattedDate, style: TextStyle(fontSize: 12, color: Color(0xffD9D9D9))),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      todo.listDesc,
+                                      style: TextStyle(fontSize: 12, color: Colors.black),
+                                      maxLines: 3,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: true,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+            ],
+          ),
+        ),
+        floatingActionButton: RawMaterialButton(
+          onPressed: () {
+            // Navigator.pushNamed(context, '/add_to_do');
+            Get.to(Addtodo());
+          },
+          child: Image.asset('assets/images/Icon Button Add.png', width: 66),
         ),
       ),
     );
   }
 
-  Future<Null> _refreshTodo() async {
-    await _fetchTodo();
+  Future<void> _refreshTodo() async {
+    setState(() {
+      _fetchTodo();
+    });
   }
 }
