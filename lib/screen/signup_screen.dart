@@ -25,9 +25,9 @@ class _SignupState extends State<Signup> {
   final userPassword = TextEditingController();
 
   Future<void> _signup() async {
-    final String url = '$apiUrl/api/create_user';
+    final url = Uri.parse('$apiUrl/api/create_user');
     final response = await http.post(
-      Uri.parse(url),
+      url,
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676'},
       body: json.encode({
         'user_email': userEmail.text.trim(),
