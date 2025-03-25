@@ -25,10 +25,10 @@ class _SplashScreenState extends State<SplashScreen> {
 
     if (userId != null) {
       // Navigator.pushReplacementNamed(context, '/to_do_list');
-      Get.off(Todolist());
+      Get.off(TodoListScreen());
     } else {
       // Navigator.pushReplacementNamed(context, '/sign_in');
-      Get.off(Signin());
+      Get.off(SignInScreen());
     }
   }
 

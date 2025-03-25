@@ -25,7 +25,7 @@ class _SignupState extends State<Signup> {
   final userPassword = TextEditingController();
 
   Future<void> _signup() async {
-    final url = Uri.parse('$apiUrl/api/create_user');
+    final url = Uri.parse('$apiUrl/create_user');
     final response = await http.post(
       url,
       headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676'},
@@ -40,7 +40,7 @@ class _SignupState extends State<Signup> {
       showSnackBar("Sign Up successfull");
       // Navigator.pop(context);
       Get.back();
-    } else if (response.body.contains("This e-mail has already been used..")) {
+    } else if (response.statusCode == 400) {
       showSnackBar("This e-mail has already been used..");
     } else {
       showSnackBar("Failed to Sign Up");
@@ -71,7 +71,7 @@ class _SignupState extends State<Signup> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           IconButton(
-                            icon: Image.asset("assets/images/ICon Arrowleft.png"),
+                            icon: Image.asset("assets/images/icon_arrowleft.png"),
                             onPressed: () {
                               // Navigator.pop(context);
                               Get.back();
@@ -84,7 +84,7 @@ class _SignupState extends State<Signup> {
                       SizedBox(height: 20),
                       Text("Please enter the information \n           below to access.", style: GoogleFonts.outfit(fontSize: 16)),
                       SizedBox(height: 25),
-                      Image.asset("assets/images/Ion Signup.png", width: 98, height: 98),
+                      Image.asset("assets/images/icon_signup.png", width: 98, height: 98),
                       SizedBox(height: 30),
                       Padding(
                         padding: EdgeInsets.all(5),
