@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myproject/controller/user_getx.controller.dart';
 import 'package:myproject/screen/signup_screen.dart';
 import 'package:myproject/service/signin_service.dart';
 
@@ -14,15 +15,14 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
+  final UserGetxController userGetxController = Get.put(UserGetxController());
   bool passwordVisible = true;
   final formkey = GlobalKey<FormState>();
   final userEmailController = TextEditingController();
   final userPasswordController = TextEditingController();
 
-  void _signIn() {
-    final email = userEmailController.text;
-    final password = userPasswordController.text;
-    SignInService.signIn(context, email, password);
+  Future<void> signIn(String email, String password) async {
+    await SignInService.signIn(context, email, password);
   }
 
   @override
@@ -117,11 +117,11 @@ class _SignInScreenState extends State<SignInScreen> {
                                         filled: true,
                                         fillColor: Color(0xffF3F3F3),
                                       ),
-                                      onEditingComplete: () {
-                                        if (formkey.currentState!.validate()) {
-                                          _signIn();
-                                        }
-                                      },
+                                      // onEditingComplete: () async {
+                                      //   if (formkey.currentState!.validate()) {
+                                      //     await userGetxController.signIn(context, userEmailController.text, userPasswordController.text);
+                                      //   }
+                                      // },
                                       validator: (value) {
                                         if (value!.isEmpty) {
                                           return 'Please enter your password';
@@ -145,9 +145,9 @@ class _SignInScreenState extends State<SignInScreen> {
                                   SizedBox(
                                     width: double.infinity,
                                     child: GestureDetector(
-                                      onTap: () {
+                                      onTap: () async {
                                         if (formkey.currentState!.validate()) {
-                                          _signIn();
+                                          await userGetxController.signIn(context, userEmailController.text, userPasswordController.text);
                                         }
                                       },
                                       child: Container(
@@ -174,7 +174,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     child: GestureDetector(
                                       onTap: () {
                                         // Navigator.push(context, MaterialPageRoute(builder: (ctx) => const Signup()));
-                                        Get.off(Signup());
+                                        Get.to(Signup());
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(15),

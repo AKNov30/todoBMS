@@ -1,6 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myproject/models/todo_model.dart';
+import 'package:myproject/screen/add_to_do_screen.dart';
 
 class ModalsHelper {
   static void showSignOutModal(BuildContext context, Function onLogout) {
@@ -25,11 +29,11 @@ class ModalsHelper {
                     children: [
                       Row(
                         children: [
-                          Image.asset("assets/images/Icon Logut.png", width: 24, height: 24),
+                          Image.asset("assets/images/icon_logout.png", width: 24, height: 24),
                           Text("  Sign out", style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w400)),
                         ],
                       ),
-                      Image.asset("assets/images/Icon Arrow2.png"),
+                      Image.asset("assets/images/icon_arrow2.png"),
                     ],
                   ),
                 ),
@@ -45,12 +49,8 @@ class ModalsHelper {
 
   static void showEditModal(
     BuildContext context,
-    int listId,
-    String listTitle,
-    String listDesc,
-    String listCompleted,
-    Function onEdit,
-    Function onDelete,
+    TodoModel todo,
+    // Function onProcess
   ) {
     showModalBottomSheet(
       context: context,
@@ -63,34 +63,37 @@ class ModalsHelper {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 InkWell(
-                  onTap: () => onEdit(),
+                  onTap: () {
+                    // Get.to(AddToDoScreen(userId: userId))
+                  },
+
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          Image.asset("assets/images/Icon Edit.png", width: 24, height: 24),
+                          Image.asset("assets/images/icon_edit.png", width: 24, height: 24),
                           Text("  Edit", style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w400)),
                         ],
                       ),
-                      Image.asset("assets/images/Icon Arrow2.png"),
+                      Image.asset("assets/images/icon_arrow2.png"),
                     ],
                   ),
                 ),
                 const SizedBox(height: 10),
                 const Divider(),
                 InkWell(
-                  onTap: () => onDelete(),
+                  // onTap: () => onDelete(),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Row(
                         children: [
-                          Image.asset("assets/images/Icon Trash.png", width: 24, height: 24),
+                          Image.asset("assets/images/icon_trash.png", width: 24, height: 24),
                           Text("  Delete", style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.w400)),
                         ],
                       ),
-                      Image.asset("assets/images/Icon Arrow2.png"),
+                      Image.asset("assets/images/icon_arrow2.png"),
                     ],
                   ),
                 ),

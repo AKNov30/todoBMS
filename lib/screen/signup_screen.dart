@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
-// import 'package:hexcolor/hexcolor.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:email_validator/email_validator.dart';
+import 'package:myproject/service/signup_service.dart';
 
 class Signup extends StatefulWidget {
   const Signup({super.key});
@@ -16,7 +13,6 @@ class Signup extends StatefulWidget {
 }
 
 class _SignupState extends State<Signup> {
-  String apiUrl = dotenv.env['api_url'] ?? 'Not Found';
   bool passwordVisible = true;
   final formkey = GlobalKey<FormState>();
   final userFirstname = TextEditingController();
@@ -25,31 +21,11 @@ class _SignupState extends State<Signup> {
   final userPassword = TextEditingController();
 
   Future<void> _signup() async {
-    final url = Uri.parse('$apiUrl/create_user');
-    final response = await http.post(
-      url,
-      headers: {'Content-Type': 'application/json', 'Authorization': 'Bearer 950b88051dc87fe3fcb0b4df25eee676'},
-      body: json.encode({
-        'user_email': userEmail.text.trim(),
-        'user_password': userPassword.text.trim(),
-        'user_fname': userFirstname.text.trim(),
-        'user_lname': userLastname.text.trim(),
-      }),
-    );
-    if (response.statusCode == 200) {
-      showSnackBar("Sign Up successfull");
-      // Navigator.pop(context);
-      Get.back();
-    } else if (response.statusCode == 400) {
-      showSnackBar("This e-mail has already been used..");
-    } else {
-      showSnackBar("Failed to Sign Up");
-    }
-  }
-
-  void showSnackBar(String message) {
-    final snackBar = SnackBar(content: Text(message), duration: const Duration(seconds: 2));
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    final userFname = userFirstname.text;
+    final userLname = userLastname.text;
+    final email = userEmail.text;
+    final password = userPassword.text;
+    SignUpService.signUp(context, email, password, userFname, userLname);
   }
 
   @override
