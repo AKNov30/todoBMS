@@ -29,7 +29,6 @@ class SignInService {
           await prefs.setString('userEmail', user.userEmail);
           await prefs.setString('userFname', user.userFname);
           await prefs.setString('userLname', user.userLname);
-          await prefs.setBool('is_logged_in', true);
 
           Get.off(TodoListScreen());
         } else {

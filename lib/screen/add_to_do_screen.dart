@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:myproject/models/todo_model.dart';
+import 'package:myproject/screen/todolist_screen.dart';
 import 'package:myproject/service/todo_service.dart';
 
 class AddToDoScreen extends StatefulWidget {
-  final int userId;
-  const AddToDoScreen({super.key, required this.userId});
+  final int? userId;
+  final TodoModel? todo;
+  const AddToDoScreen({super.key, this.userId, this.todo});
   @override
   State<AddToDoScreen> createState() => _AddToDoScreenState();
 }
@@ -14,16 +17,37 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
   final formkey = GlobalKey<FormState>();
   final todotitle = TextEditingController();
   final tododescription = TextEditingController();
-  int userId = 0;
   bool isSwitchedOn = false;
 
   @override
   void initState() {
     super.initState();
+    if (widget.todo != null) {
+      todotitle.text = widget.todo!.userTodoListTitle ?? '';
+      tododescription.text = widget.todo!.userTodoListDesc ?? '';
+      isSwitchedOn = widget.todo!.userTodoListCompleted == 'true' ? true : false;
+      print("hi edi to do");
+    } else {
+      print("hi add to do");
+    }
   }
 
-  Future<void> _createToDo() async {
-    ToDoService.createToDo(context, widget.userId.toString(), todotitle.text.trim(), tododescription.text.trim(), isSwitchedOn);
+  Future<void> _postToDo() async {
+    TodoModel itemTodo = TodoModel();
+    itemTodo.userTodoListTitle = todotitle.text;
+    itemTodo.userTodoListDesc = tododescription.text;
+    itemTodo.userTodoListCompleted = isSwitchedOn.toString();
+    if (widget.todo == null) {
+      itemTodo.userId = widget.userId;
+      ToDoService.createToDo(context, itemTodo);
+    } else {
+      itemTodo.userId = widget.todo?.userId;
+      itemTodo.userTodoListId = widget.todo?.userTodoListId;
+      print("4567");
+      await ToDoService.updateToDo(context, itemTodo);
+      // Navigator.of(context).pop();
+      Get.offAll(() => TodoListScreen());
+    }
   }
 
   @override
@@ -47,7 +71,7 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
                 },
                 child: Image.asset("assets/images/icon_arrowleft.png", color: Colors.white),
               ),
-              Text("Add Your Todo", style: GoogleFonts.outfit(fontSize: 20, color: Colors.white)),
+              Text(widget.todo == null ? "Add Your Todo" : "Your Todo", style: GoogleFonts.outfit(fontSize: 20, color: Colors.white)),
             ],
           ),
         ),
@@ -59,7 +83,7 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
               child: Column(
                 // crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text('USER ID: ${widget.userId}'),
+                  // Text('USER ID: ${widget.userId}'),
                   Container(
                     decoration: BoxDecoration(
                       color: Color(0xffffffff),
@@ -140,7 +164,7 @@ class _AddToDoScreenState extends State<AddToDoScreen> {
                     child: GestureDetector(
                       onTap: () {
                         if (formkey.currentState!.validate()) {
-                          _createToDo();
+                          _postToDo();
                         }
                       },
                       child: Container(

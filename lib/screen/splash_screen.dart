@@ -20,11 +20,10 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> _checkLoginStatus() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     int? userId = prefs.getInt('userId');
-    bool? isLogged = prefs.getBool('is_logged_in');
 
     await Future.delayed(Duration(seconds: 2));
 
-    if (userId != null && isLogged == true) {
+    if (userId != null) {
       // Navigator.pushReplacementNamed(context, '/to_do_list');
       Get.off(TodoListScreen());
     } else {

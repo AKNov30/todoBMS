@@ -24,10 +24,10 @@ class _TodoListScreenState extends State<TodoListScreen> {
   String firstName = '';
   String lastName = '';
   final searchController = TextEditingController();
-  late Future<List<TodoModel>> _todoListFuture;
+  late Future<List<TodoModel>> _allTodos;
   List<TodoModel> _filteredTodos = [];
   bool _isSearching = false;
-  final UserGetxController userGetxController = Get.put(UserGetxController());
+  // final UserGetxController userGetxController = Get.put(UserGetxController());
 
   @override
   void initState() {
@@ -45,8 +45,8 @@ class _TodoListScreenState extends State<TodoListScreen> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
       userId = prefs.getInt('userId');
-      // firstName = prefs.getString('userFname') ?? '';
-      // lastName = prefs.getString('userLname') ?? '';
+      firstName = prefs.getString('userFname') ?? '';
+      lastName = prefs.getString('userLname') ?? '';
     });
     if (userId != null) {
       setState(() {
@@ -56,16 +56,15 @@ class _TodoListScreenState extends State<TodoListScreen> {
   }
 
   Future<void> getToDoListById() async {
-    print('test');
-    print('qq ${userGetxController.user.value?.userId}');
     setState(() {
-      _todoListFuture = ToDoService.getToDoListById(context, userId!);
+      _allTodos = ToDoService.getToDoListById(context, userId!);
     });
   }
 
   void _logOut() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.clear();
+    Get.delete<UserGetxController>();
     Get.offAll(SignInScreen());
   }
 
@@ -78,7 +77,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
         final lowerQuery = query.toLowerCase();
         _filteredTodos =
             todos.where((todo) {
-              return todo.userTodoListTitle.toLowerCase().contains(lowerQuery) || todo.userTodoListDesc.toLowerCase().contains(lowerQuery);
+              return todo.userTodoListTitle!.toLowerCase().contains(lowerQuery) || todo.userTodoListDesc!.toLowerCase().contains(lowerQuery);
             }).toList();
       }
     });
@@ -110,7 +109,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
                     radius: 20,
                     backgroundColor: Colors.white,
                     child: Text(
-                      userGetxController.user.value?.userFname[0] ?? "",
+                      '${firstName[0].toUpperCase()}',
                       style: TextStyle(color: Color(0xff53CD9F), fontSize: 18, fontWeight: FontWeight.bold),
                     ),
                   ),
@@ -124,10 +123,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text("Hello!", style: GoogleFonts.outfit(fontSize: 12, color: Colors.white)),
-                    Text(
-                      maxText("${userGetxController.user.value?.userFname ?? ""} $lastName", 15),
-                      style: TextStyle(fontSize: 16, color: Colors.white),
-                    ),
+                    Text(maxText("$firstName $lastName", 15), style: TextStyle(fontSize: 16, color: Colors.white)),
                   ],
                 ),
               ),
@@ -139,7 +135,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
           key: _refreshIndicatorKey,
           onRefresh: getToDoListById,
           child: FutureBuilder<List<TodoModel>>(
-            future: _todoListFuture,
+            future: _allTodos,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -236,7 +232,7 @@ class _TodoListScreenState extends State<TodoListScreen> {
                                                   children: [
                                                     Expanded(
                                                       child: Text(
-                                                        todo.userTodoListTitle,
+                                                        todo.userTodoListTitle ?? '',
                                                         style: GoogleFonts.outfit(
                                                           fontSize: 20,
                                                           fontWeight: FontWeight.w500,
@@ -247,20 +243,22 @@ class _TodoListScreenState extends State<TodoListScreen> {
                                                       ),
                                                     ),
                                                     TextButton(
-                                                      onPressed: () {
-                                                        ModalsHelper.showEditModal(context, todo);
+                                                      onPressed: () async {
+                                                        // print("aas $todo.userId}");
+                                                        await ModalsHelper.showEditModal(context, todo);
+                                                        await getToDoListById();
                                                       },
                                                       child: const Text("..."),
                                                     ),
                                                   ],
                                                 ),
                                                 Text(
-                                                  DateUtil.formatDate(todo.userTodoListLastUpdate),
+                                                  DateUtil.formatDate(todo.userTodoListLastUpdate ?? DateTime.now()),
                                                   style: const TextStyle(fontSize: 12, color: Color(0xffD9D9D9)),
                                                 ),
                                                 const SizedBox(height: 5),
                                                 Text(
-                                                  todo.userTodoListDesc,
+                                                  todo.userTodoListDesc ?? '',
                                                   style: const TextStyle(fontSize: 12, color: Colors.black),
                                                   maxLines: 3,
                                                   overflow: TextOverflow.ellipsis,

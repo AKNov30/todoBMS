@@ -25,9 +25,9 @@ class UserGetxController extends GetxController {
         print('qq ${user.value?.userId}');
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setInt('userId', user.value?.userId ?? 0);
-        // await prefs.setBool('is_logged_in', true);
-        Navigator.pushReplacement(context, MaterialPageRoute<void>(builder: (BuildContext context) => const TodoListScreen()));
-        // Get.off(TodoListScreen());
+        await prefs.setBool('is_logged_in', true);
+        // Navigator.pushReplacement(context, MaterialPageRoute<void>(builder: (BuildContext context) => const TodoListScreen()));
+        Get.off(() => TodoListScreen());
       } else if (response.statusCode == 400) {
         final body = jsonDecode(response.body);
         ModalsHelper.showSnackBar(context, body["message"]);

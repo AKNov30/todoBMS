@@ -15,13 +15,16 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignInScreenState extends State<SignInScreen> {
-  final UserGetxController userGetxController = Get.put(UserGetxController());
+  // final UserGetxController userGetxController = Get.put(UserGetxController(), permanent: true);
   bool passwordVisible = true;
   final formkey = GlobalKey<FormState>();
   final userEmailController = TextEditingController();
   final userPasswordController = TextEditingController();
 
   Future<void> signIn(String email, String password) async {
+    final email = userEmailController.text;
+    final password = userPasswordController.text;
+    print('456');
     await SignInService.signIn(context, email, password);
   }
 
@@ -117,11 +120,11 @@ class _SignInScreenState extends State<SignInScreen> {
                                         filled: true,
                                         fillColor: Color(0xffF3F3F3),
                                       ),
-                                      // onEditingComplete: () async {
-                                      //   if (formkey.currentState!.validate()) {
-                                      //     await userGetxController.signIn(context, userEmailController.text, userPasswordController.text);
-                                      //   }
-                                      // },
+                                      onEditingComplete: () async {
+                                        if (formkey.currentState!.validate()) {
+                                          await signIn(userEmailController.text, userPasswordController.text);
+                                        }
+                                      },
                                       validator: (value) {
                                         if (value!.isEmpty) {
                                           return 'Please enter your password';
@@ -146,9 +149,7 @@ class _SignInScreenState extends State<SignInScreen> {
                                     width: double.infinity,
                                     child: GestureDetector(
                                       onTap: () async {
-                                        if (formkey.currentState!.validate()) {
-                                          await userGetxController.signIn(context, userEmailController.text, userPasswordController.text);
-                                        }
+                                        await signIn(userEmailController.text, userPasswordController.text);
                                       },
                                       child: Container(
                                         padding: EdgeInsets.all(15),

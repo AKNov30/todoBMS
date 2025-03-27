@@ -5,6 +5,8 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:myproject/models/todo_model.dart';
 import 'package:myproject/screen/add_to_do_screen.dart';
+import 'package:myproject/screen/todolist_screen.dart';
+import 'package:myproject/service/todo_service.dart';
 
 class ModalsHelper {
   static void showSignOutModal(BuildContext context, Function onLogout) {
@@ -47,12 +49,13 @@ class ModalsHelper {
     );
   }
 
-  static void showEditModal(
+  static Future<void> showEditModal(
     BuildContext context,
     TodoModel todo,
     // Function onProcess
   ) {
-    showModalBottomSheet(
+    print("456789 ${todo.userId}");
+    return showModalBottomSheet(
       context: context,
       builder: (BuildContext context) {
         return Container(
@@ -64,7 +67,8 @@ class ModalsHelper {
               children: [
                 InkWell(
                   onTap: () {
-                    // Get.to(AddToDoScreen(userId: userId))
+                    Get.back();
+                    Get.to(() => AddToDoScreen(todo: todo));
                   },
 
                   child: Row(
@@ -83,7 +87,9 @@ class ModalsHelper {
                 const SizedBox(height: 10),
                 const Divider(),
                 InkWell(
-                  // onTap: () => onDelete(),
+                  onTap: () {
+                    showConfirmDeleteDialog(context, todo.userTodoListId ?? 0);
+                  },
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -105,8 +111,8 @@ class ModalsHelper {
     );
   }
 
-  static void showConfirmDeleteDialog(BuildContext context, Function onDelete) {
-    showDialog(
+  static Future<void> showConfirmDeleteDialog(BuildContext context, int todoId) {
+    return showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
@@ -115,10 +121,11 @@ class ModalsHelper {
           actions: <Widget>[
             TextButton(onPressed: () => Get.back(), child: const Text('Cancel')),
             TextButton(
-              onPressed: () {
-                onDelete();
-                Get.back(); // ปิด Dialog
-                Get.back(); // ปิด Modal
+              onPressed: () async {
+                await ToDoService.deleteToDoListById(context, todoId);
+                Get
+                  ..back()
+                  ..back();
               },
               child: const Text('Delete', style: TextStyle(color: Colors.red)),
             ),

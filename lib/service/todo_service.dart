@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
@@ -28,9 +29,13 @@ class ToDoService {
     }
   }
 
-  static Future<void> deleteToDoListById(BuildContext context, String todoListId) async {
+  static Future<void> deleteToDoListById(BuildContext context, int todoId) async {
+    if (todoId == 0) {
+      ModalsHelper.showSnackBar(context, "no have todo Id");
+      return;
+    }
     try {
-      final response = await http.delete(Uri.parse('$apiUrl/delete_todo/$todoListId'), headers: apiHeaders);
+      final response = await http.delete(Uri.parse('$apiUrl/delete_todo/$todoId'), headers: apiHeaders);
       if (response.statusCode == 200) {
         ModalsHelper.showSnackBar(context, 'Delete successfully');
       } else {
@@ -42,14 +47,9 @@ class ToDoService {
     }
   }
 
-  static Future<void> createToDo(BuildContext context, String userId, String userTodoListTitle, String userTodoListDesc, bool isSwitchedOn) async {
+  static Future<void> createToDo(BuildContext context, TodoModel itemTodo) async {
     try {
-      final body = jsonEncode(<String, String>{
-        'user_todo_list_title': userTodoListTitle.trim().replaceAll(RegExp(r'[\u200B-\u200D\uFEFF]'), ''),
-        'user_todo_list_desc': userTodoListDesc.trim().replaceAll(RegExp(r'[\u200B-\u200D\uFEFF]'), ''),
-        'user_todo_list_completed': isSwitchedOn.toString().trim().replaceAll(RegExp(r'[\u200B-\u200D\uFEFF]'), ''),
-        'user_id': userId,
-      });
+      final body = todoModelToJson(itemTodo);
       final response = await http.post(Uri.parse('$apiUrl/create_todo'), headers: apiHeaders, body: body);
       if (response.statusCode == 200) {
         final responseData = response.body;
@@ -68,38 +68,16 @@ class ToDoService {
     }
   }
 
-  static Future<void> updateToDo(
-    BuildContext context,
-    String userTodoListId,
-    String userTodoListTitle,
-    String userTodoListDesc,
-    bool isSwitchedOn,
-    String userId,
-  ) async {
+  static Future<void> updateToDo(BuildContext context, TodoModel itemTodo) async {
+    inspect(itemTodo);
     try {
-      final body = jsonEncode({
-        'user_todo_list_id': userTodoListId,
-        'user_todo_list_title': userTodoListTitle.replaceAll(RegExp(r'[\u200B-\u200D\uFEFF]'), ''),
-        'user_todo_list_desc': userTodoListDesc.replaceAll(RegExp(r'[\u200B-\u200D\uFEFF]'), ''),
-        'user_todo_list_completed': isSwitchedOn.toString(),
-        'user_id': userId,
-      });
-
+      final body = todoModelToJson(itemTodo);
+      print("ddd $body");
       final response = await http.post(Uri.parse('$apiUrl/update_todo'), headers: apiHeaders, body: body);
-
-      if (response.statusCode == 200) {
-        final responseData = response.body;
-        try {
-          final Map<String, dynamic> data = jsonDecode(responseData);
-          Get.offAll(TodoListScreen());
-        } catch (e) {
-          if (response.body == 'OK') {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('ToDo created successfully')));
-            Get.offAll(TodoListScreen());
-          } else {
-            ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('An unexpected error occurred.')));
-          }
-        }
+      print(response.body);
+      inspect(itemTodo);
+      if (response.statusCode == 200 && response.body == "OK") {
+        ModalsHelper.showSnackBar(context, 'Update Todo Success');
       } else {
         ModalsHelper.showSnackBar(context, 'Failed to update ToDo');
       }
